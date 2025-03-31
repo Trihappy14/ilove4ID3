@@ -1,17 +1,10 @@
 import cv2
 
-# GStreamer pipeline for UDP stream from OpenHD
-gst_pipeline = (
-    "udpsrc port=5600 ! "
-    "application/x-rtp, encoding-name=H264 ! "
-    "rtph264depay ! "
-    "avdec_h264 ! "
-    "videoconvert ! "
-    "appsink"
-)
+# FFmpeg compatible stream URL
+stream_url = "udp://127.0.0.1:5600"
 
-# OpenCV VideoCapture using GStreamer pipeline
-cap = cv2.VideoCapture(gst_pipeline, cv2.CAP_GSTREAMER)
+# Open video using FFmpeg
+cap = cv2.VideoCapture(stream_url, cv2.CAP_FFMPEG)
 
 if not cap.isOpened():
     print("Failed to open video stream.")
@@ -23,7 +16,7 @@ while True:
         print("Failed to capture frame.")
         break
 
-    # Display video using OpenCV
+    # Display the video
     cv2.imshow('OpenHD Live Stream', frame)
 
     # Press 'q' to exit
